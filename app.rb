@@ -2,7 +2,10 @@ require 'faraday'
 require 'nokogiri'
 require "pry"
 
-url = ARGV[0]
+@artist_name = ARGV.join("-").downcase
+@artist_name[0] = @artist_name[0].capitalize!
+
+artist_url = 'http://genius.com/artists/' + @artist_name
 
 def scrape(url)
 	response = Faraday.get(url)
@@ -36,13 +39,13 @@ def scrape_lyrics(songs)
 		doc = scrape(song)
 		song_name = "* * * " + doc.css('.song_header-primary_info-title').text.upcase + " * * *"
 		lyrics = doc.css('.lyrics p').text.gsub(/\[.*\]/, "").gsub(/^$\n^$\n/, "\n").strip!
-		File.open('lyrics.txt', 'a') do |f|
-			f << song_name+"\n\n"+lyrics+"\n\n"
+		File.open(@artist_name + '.txt', 'a') do |f|
+			f << song_name + "\n\n" + lyrics + "\n\n"
 			puts "succesfully scraped song #{index.to_s} of #{songs.length.to_s}: #{song}"
 		end
 	end
 end
 
-albums = get_album_links(url)
+albums = get_album_links(artist_url)
 songs = get_song_links(albums)
 scrape_lyrics(songs)
