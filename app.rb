@@ -31,5 +31,18 @@ def get_song_links(album_links)
 	songs
 end
 
+def scrape_lyrics(songs)
+	songs.each.with_index(1) do |song, index|
+		doc = scrape(song)
+		song_name = "* * * " + doc.css('.song_header-primary_info-title').text.upcase + " * * *"
+		lyrics = doc.css('.lyrics p').text.gsub(/\[.*\]/, "").gsub(/^$\n^$\n/, "\n").strip!
+		File.open('lyrics.txt', 'a') do |f|
+			f << song_name+"\n\n"+lyrics+"\n\n"
+			puts "succesfully scraped song #{index.to_s} of #{songs.length.to_s}: #{song}"
+		end
+	end
+end
+
 albums = get_album_links(url)
 songs = get_song_links(albums)
+scrape_lyrics(songs)
