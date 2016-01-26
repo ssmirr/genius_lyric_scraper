@@ -9,6 +9,9 @@ artist_url = 'http://genius.com/artists/' + @artist_name
 
 def scrape(url)
 	response = Faraday.get(url)
+	if response.headers[:status].include?('404')
+		abort("page not found, most likely due to a malformed artist name or bad link. try again.")
+	end
 	doc = Nokogiri::HTML(response.body)
 end
 
