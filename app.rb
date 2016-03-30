@@ -45,7 +45,7 @@ def scrape_lyrics(songs)
 		File.open(@artist_name + '.txt', 'a') do |f|
 			f << song_name + "\n\n" + lyrics + "\n\n"
 			puts "succesfully scraped song #{index.to_s} of #{songs.length.to_s}: #{song}"
-		end
+		end 
 	end
 end
 
