@@ -51,4 +51,4 @@ end
 
 albums = get_album_links(artist_url)
 songs = get_song_links(albums)
-scrape_lyrics(songs)
+scrape_lyrics(songs) 
