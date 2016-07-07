@@ -2,7 +2,8 @@ This is quick and dirty lyric scraper I threw together to fetch source material 
 
 Dependencies:
 **Faraday**,
-**Nokogiri**
+**Nokogiri**, 
+**Pry**
 
 Usage:
 
