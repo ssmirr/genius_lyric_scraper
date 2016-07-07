@@ -7,6 +7,7 @@ require "pry"
 
 artist_url = 'http://genius.com/artists/' + @artist_name
 
+
 def scrape(url)
 	response = Faraday.get(url)
 	if response.headers[:status].include?('404')
@@ -18,7 +19,7 @@ end
 def get_album_links(url)
 	doc = scrape(url)
 	album_links = []
-	doc.css('.album_link').each do |a|
+	doc.css('.vertical_album_card').each do |a|
 		puts "fetching album: #{a[:href]}"
 		album_links << a[:href]
 	end
@@ -28,7 +29,7 @@ end
 def get_song_links(album_links)
 	songs = []
 	album_links.each do |link|
-		doc = scrape('http://genius.com'+link)
+		doc = scrape(link)
 		doc.css('.song_link').each do |a|
 			puts "fetching song: #{a[:href]}"
 			songs << a[:href]
@@ -43,7 +44,7 @@ def scrape_lyrics(songs)
 		song_name = "* * * " + doc.css('.song_header-primary_info-title').text.upcase + " * * *"
 		lyrics = doc.css('.lyrics p').text.gsub(/\[.*\]/, "").gsub(/^$\n^$\n/, "\n").strip!
 		File.open(@artist_name + '.txt', 'a') do |f|
-			f << song_name + "\n\n" + lyrics + "\n\n"
+			f << song_name.to_s + "\n\n" + lyrics.to_s + "\n\n"
 			puts "succesfully scraped song #{index.to_s} of #{songs.length.to_s}: #{song}"
 		end 
 	end
